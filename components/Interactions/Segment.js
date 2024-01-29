@@ -1,45 +1,52 @@
 import React, { useContext } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
-import { AppText } from "../common";
-import { SettingsContext } from "../../context";
-import { colors, touches } from "../../config";
+import { AppImage } from "../common";
+import { touches } from "../../config";
 import useHaptics from "../../hooks/useHaptics";
 import useAudio from "../../hooks/useAudio";
 
-function Segment({ image, audio }) {
+function Segment({
+  label,
+  image,
+  audio,
+  containerStyle,
+  imageStyle,
+  cancelOnLongPress,
+  displayOnly,
+}) {
   const haptics = useHaptics();
   const sound = useAudio(audio);
-  const { theme } = useContext(SettingsContext);
 
   return (
     <TouchableOpacity
-      onPress={async () => {
-        haptics.areaPress();
-        if (audio) sound.playSound();
-      }}
-      activeOpacity={touches.activeOpacity}
-      style={[
-        styles.container,
-        {
-          borderColor: colors[theme + "Border"],
-          backgroundColor: colors[theme + "Offset"],
-        },
-      ]}
+      onPress={
+        displayOnly
+          ? null
+          : async () => {
+              haptics.areaPress();
+              if (audio) sound.playSound();
+            }
+      }
+      onLongPress={cancelOnLongPress ? () => {} : null}
+      activeOpacity={displayOnly ? 1 : touches.activeOpacity}
+      style={[styles.container, containerStyle]}
     >
-      <AppText>{image}</AppText>
+      <AppImage file={image} alt={label} style={imageStyle} />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: "99%",
-    height: "98%",
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 2,
     borderRadius: 5,
+  },
+  text: {
+    textAlign: "center",
+    fontWeight: "bold",
   },
 });
 

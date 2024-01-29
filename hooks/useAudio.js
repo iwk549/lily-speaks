@@ -5,27 +5,12 @@ import { SettingsContext } from "../context";
 function useAudio(file) {
   const { sounds } = useContext(SettingsContext); // use this for sound settings
 
-  const [sound, setSound] = useState();
-
   async function playSound() {
-    console.log("Loading Sound");
-    const { sound } = await Audio.Sound.createAsync(
-      require("../assets/testData/sounds/CantinaBand3.wav")
-    );
-    setSound(sound);
-
-    console.log("Playing Sound");
-    await sound.playAsync();
+    const { sound } = await Audio.Sound.createAsync(file, { shouldPlay: true });
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.didJustFinish) sound.unloadAsync();
+    });
   }
-
-  useEffect(() => {
-    return sound
-      ? () => {
-          console.log("Unloading Sound");
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
 
   return {
     playSound,

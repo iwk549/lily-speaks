@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { StyleSheet, View } from "react-native";
 
 import Screen from "./../components/Screen";
-import { AppText, PageHeader } from "../components/common";
+import { PageHeader } from "../components/common";
 import { SettingsContext } from "../context";
 import Setting from "./../components/Settings/Setting";
 

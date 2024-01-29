@@ -12,10 +12,10 @@ function AppSwitch({ label, checked, onChange }) {
         <Switch
           onValueChange={onChange}
           value={checked}
-          thumbColor={checked ? colors.pop : colors.darkBackgroundColor}
+          thumbColor={checked ? colors.pop : colors.dark}
           trackColor={{
             false: colors.muted,
-            true: colors.lightBackgroundColor,
+            true: colors.light,
           }}
         />
       </View>

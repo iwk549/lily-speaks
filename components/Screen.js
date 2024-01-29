@@ -21,7 +21,7 @@ function Screen({ children, scroll, orientation = "landscape" }) {
     width: dimensions.width,
     height: dimensions.height - dimensions.statusBarHeight,
     marginTop: dimensions.statusBarHeight,
-    backgroundColor: colors[(theme || "light") + "BackgroundColor"],
+    backgroundColor: colors[theme || "light"],
   };
 
   return scroll ? (

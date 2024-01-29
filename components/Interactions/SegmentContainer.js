@@ -1,51 +1,65 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import React, { useContext } from "react";
+import { StyleSheet, View } from "react-native";
 
 import Segment from "./Segment";
 import { sizes } from "../../config";
 import useDimensions from "../../hooks/useDimensions";
+import { InteractionsContext } from "../../context";
 
-function SegmentContainer({ segments = [] }) {
+const columnMap = [1, 2, 2, 2, 3, 3, 3, 3, 3];
+
+function SegmentContainer({ displayOnly, containerSize }) {
   const dimensions = useDimensions();
 
-  const [mappedSegments, setMappedSegments] = useState([]);
-
-  useEffect(() => {
-    mapSegments();
-  }, [segments, dimensions]);
+  const { segments } = useContext(InteractionsContext);
 
   const mapSegments = () => {
-    // TODO function here to map segments into matrix based on user selections
-    // for now assume two rows of two
-    const seg1 = segments[0];
-    const seg2 = segments[1];
-    setMappedSegments([
-      [seg1, seg2],
-      [seg1, seg2],
-    ]);
+    const columns = columnMap[segments.length - 1];
+
+    const mappedSegments = [];
+    const row = [];
+    segments.forEach((s, idx) => {
+      if (idx !== 0 && idx % columns === 0) {
+        mappedSegments.push([...row]);
+        row.length = 0;
+      }
+      row.push(s);
+    });
+    if (row.length) mappedSegments.push([...row]);
+
+    return mappedSegments;
   };
 
   return (
     <View style={styles.container}>
       <View>
-        {mappedSegments.map((row, rowIdx) => (
+        {mapSegments().map((row, rowIdx, arr) => (
           <View key={rowIdx} style={[styles.row]}>
             {row.map((segment, colIdx) => (
               <View
                 key={colIdx}
                 style={[
                   {
-                    height:
-                      (dimensions.height -
-                        dimensions.statusBarHeight -
-                        sizes.margin * 2) /
-                      mappedSegments.length,
-                    width: dimensions.width / row.length - sizes.margin * 2,
+                    height: containerSize
+                      ? containerSize.height / arr.length
+                      : (dimensions.height -
+                          dimensions.statusBarHeight -
+                          sizes.margin * 2) /
+                        arr.length,
+                    width: containerSize
+                      ? containerSize.width / row.length
+                      : dimensions.width / row.length - sizes.margin * 2,
                     marginTop: sizes.margin,
                   },
                 ]}
               >
-                <Segment image={segment.image} audio={segment.audio} />
+                <Segment
+                  label={segment.label}
+                  image={segment.image}
+                  audio={segment.audio}
+                  displayOnly={displayOnly}
+                  idx={colIdx}
+                />
               </View>
             ))}
           </View>

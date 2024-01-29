@@ -13,7 +13,7 @@ export default function DrawerNavigator() {
   return (
     <NavigationContainer>
       <Drawer.Navigator
-        initialRouteName="Interaction"
+        initialRouteName={routes.INTERACTIONSETUP}
         screenOptions={{ headerShown: false }}
       >
         <Drawer.Screen name={routes.INTERACTION} component={Interaction} />

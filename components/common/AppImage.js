@@ -1,24 +1,17 @@
 import React from "react";
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, Image } from "react-native";
 
-function AppImage({ uri, style = {} }) {
-  const source = { uri };
+function AppImage({ uri, file, label, style = {} }) {
+  if (!uri && !file) return null;
+  const source = file || { uri };
 
-  return (
-    <View style={[styles.container, style]}>
-      <Image source={source} style={styles.image} />
-    </View>
-  );
+  return <Image source={source} style={[styles.image, style]} alt={label} />;
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: 50,
-    height: 50,
-  },
   image: {
-    width: 50,
-    height: 50,
+    resizeMode: "center",
+    borderRadius: 5,
   },
 });
 

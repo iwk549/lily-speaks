@@ -1,30 +1,26 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import AppText from "./AppText";
-import { colors, touches } from "../../config";
-
-const sizeMap = {
-  small: 25,
-  medium: 35,
-  large: 50,
-};
-
-const typeMap = {
-  info: {
-    backgroundColor: colors.info,
-    color: colors.infoText,
-  },
-};
+import { colors, sizes, touches } from "../../config";
 
 function BlockButton({ children, onPress, size, type }) {
-  const style = typeMap[type];
+  const backgroundColor = colors[type];
+  const color = colors[type + "Text"];
+  const buttonSize = sizes.buttons[size];
+
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={touches.activeOpacity}
-      style={[styles.container, style, sizeMap[size]]}
+      style={[
+        styles.container,
+        { backgroundColor, borderColor: colors.info },
+        buttonSize,
+      ]}
     >
-      <AppText style={[styles.text, style]}>{children}</AppText>
+      <AppText style={[styles.text, { color, ...buttonSize }]}>
+        {children}
+      </AppText>
     </TouchableOpacity>
   );
 }
@@ -33,10 +29,15 @@ const styles = StyleSheet.create({
   container: {
     width: "90%",
     borderRadius: 10,
+    borderWidth: 1,
+    alignSelf: "center",
+    margin: 5,
   },
   text: {
     textAlign: "center",
+    textAlignVertical: "center",
     borderRadius: 2,
+    flex: 1,
   },
 });
 
