@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View, Platform } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 
 import * as ScreenOrienation from "expo-screen-orientation";
@@ -7,13 +7,24 @@ import { SettingsContext } from "../context";
 import { colors } from "../config";
 import useDimensions from "../hooks/useDimensions";
 
+const orientations = {
+  android: {
+    portrait: "PORTRAIT",
+    landscape: "LANDSCAPE",
+  },
+  ios: {
+    portrait: ["PORTRAIT_UP"],
+    landscape: ["LANDSCAPE_LEFT"],
+  },
+};
+
 function Screen({ children, scroll, orientation = "landscape" }) {
   const { theme } = useContext(SettingsContext);
   const dimensions = useDimensions();
 
   useFocusEffect(() => {
     ScreenOrienation.lockAsync(
-      ScreenOrienation.OrientationLock[orientation.toUpperCase()]
+      ScreenOrienation.OrientationLock[orientations[Platform.OS][orientation]]
     );
   });
 
